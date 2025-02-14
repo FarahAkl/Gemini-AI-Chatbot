@@ -5,6 +5,7 @@ const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
 const addFileBtn = promptForm.querySelector("#add-file-btn");
 const cancelFileBtn = promptForm.querySelector("#cancel-file-btn");
 const stopResponseBtn = document.querySelector("#stop-response-btn");
+const deleteChatsBtn = document.querySelector("#delete-chats-btn");
 const fileInput = promptForm.querySelector("#file-input");
 const chatsContainer = document.querySelector(".chats-container");
 const GOOGLE_API_KEY = "AIzaSyDJXAr-WcQsY4JC-fUC_PVmMNI6rONn5gU";
@@ -18,7 +19,8 @@ const userData = { message: "", file: {} };
 const handleFormSubmit = (e) => {
   e.preventDefault();
   const userMessage = promptInput.value.trim();
-  if (!userMessage) return;
+  if (!userMessage || document.body.classList.contains("bot-responding"))
+    return;
   promptInput.value = "";
   userData.message = userMessage;
   document.body.classList.add("bot-responding");
@@ -97,9 +99,15 @@ const generateResponse = async (botMsgDiv) => {
       role: "model",
       parts: [{ text: responseText }],
     });
-    console.log(chatHistory);
   } catch (error) {
-    console.log(error);
+    textElement.style.color = "#d62939";
+    textElement.textContent =
+      error.name === "AbortError"
+        ? "Response generation stopped."
+        : error.message;
+    botMsgDiv.classList.remove("loading");
+    document.body.classList.remove("bot-responding");
+    scrollToBottom()
   } finally {
     userData.file = {};
   }
@@ -170,6 +178,15 @@ stopResponseBtn.addEventListener("click", () => {
   chatsContainer
     .querySelector(".bot-message.loading")
     .classList.remove("loading");
+  setTimeout(() => {
+    document.body.classList.remove("bot-responding");
+  }, 100);
+});
+
+// Delete Chats
+deleteChatsBtn.addEventListener("click", () => {
+  chatHistory.length = 0;
+  chatsContainer.innerHTML = "";
   setTimeout(() => {
     document.body.classList.remove("bot-responding");
   }, 100);
