@@ -8,6 +8,7 @@ const stopResponseBtn = document.querySelector("#stop-response-btn");
 const deleteChatsBtn = document.querySelector("#delete-chats-btn");
 const fileInput = promptForm.querySelector("#file-input");
 const chatsContainer = document.querySelector(".chats-container");
+const themeToggleBtn = document.querySelector("#toggle-theme-btn");
 const GOOGLE_API_KEY = "AIzaSyDJXAr-WcQsY4JC-fUC_PVmMNI6rONn5gU";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GOOGLE_API_KEY}`;
 
@@ -23,7 +24,7 @@ const handleFormSubmit = (e) => {
     return;
   promptInput.value = "";
   userData.message = userMessage;
-  document.body.classList.add("bot-responding");
+  document.body.classList.add("bot-responding", "chats-active");
   fileUploadWrapper.classList.remove("active", "img-attached", "file-attached");
 
   // Generate user message and add to chats container
@@ -107,7 +108,7 @@ const generateResponse = async (botMsgDiv) => {
         : error.message;
     botMsgDiv.classList.remove("loading");
     document.body.classList.remove("bot-responding");
-    scrollToBottom()
+    scrollToBottom();
   } finally {
     userData.file = {};
   }
@@ -188,9 +189,31 @@ deleteChatsBtn.addEventListener("click", () => {
   chatHistory.length = 0;
   chatsContainer.innerHTML = "";
   setTimeout(() => {
-    document.body.classList.remove("bot-responding");
+    document.body.classList.remove("bot-responding", "chats-active");
   }, 100);
 });
+
+// Handle suggestion click
+document.querySelectorAll(".suggestions-item").forEach((item) => {
+  item.addEventListener("click", () => {
+    promptInput.value = item.querySelector(".text").textContent;
+    promptForm.dispatchEvent(new Event("submit"))
+  });
+});
+
+// show hide controls for mobile
+document.addEventListener("click", ({ target }) => {
+})
+
+themeToggleBtn.addEventListener("click", () => {
+  const isLightTheme = document.body.classList.toggle("light-theme");
+  localStorage.setItem("themeColor", isLightTheme ? "light_mode" : "dark_mode");
+  themeToggleBtn.textContent = isLightTheme ? "dark_mode" : "light_mode";
+});
+
+const isLightTheme = localStorage.getItem("themeColor") === "light_mode";
+document.body.classList.toggle("light-theme", isLightTheme);
+themeToggleBtn.textContent = isLightTheme ? "dark_mode" : "light_mode";
 
 promptForm.addEventListener("submit", handleFormSubmit);
 addFileBtn.addEventListener("click", () => fileInput.click());

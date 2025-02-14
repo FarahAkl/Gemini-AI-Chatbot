@@ -19,6 +19,15 @@ body {
   background: var(--primary-color);
   color: var(--text-color);
 }
+body.light-theme{
+  --text-color:#090c13;
+  --subheading-color:#7b8cae;
+  --placeholder-color:#606982;
+  --primary-color:#f3f7ff;
+  --secondary-color:#dce6f9;
+  --seocndary-hover-color:#d2ddf2;
+  --scrollbar-color:#a2aac2;
+}
 ul {
   list-style: none;
 }
@@ -363,6 +372,6 @@ body.bot-responding .prompt-form .file-upload-wrapper {
 body.bot-responding .prompt-form .prompt-actions #stop-response-btn {
   display: block !important;
 }
-.container :is(.app-header, .suggestions) {
+body.chats-active .container :where(.app-header, .suggestions) {
   display: none;
 }
