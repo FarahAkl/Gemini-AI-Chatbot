@@ -4,11 +4,13 @@ const promptInput = promptForm.querySelector(".prompt-input");
 const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
 const addFileBtn = promptForm.querySelector("#add-file-btn");
 const cancelFileBtn = promptForm.querySelector("#cancel-file-btn");
+const stopResponseBtn = document.querySelector("#stop-response-btn");
 const fileInput = promptForm.querySelector("#file-input");
 const chatsContainer = document.querySelector(".chats-container");
 const GOOGLE_API_KEY = "AIzaSyDJXAr-WcQsY4JC-fUC_PVmMNI6rONn5gU";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_API_KEY}`;
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GOOGLE_API_KEY}`;
 
+let typingInterval, controller;
 const chatHistory = [];
 const userData = { message: "", file: {} };
 
@@ -19,6 +21,7 @@ const handleFormSubmit = (e) => {
   if (!userMessage) return;
   promptInput.value = "";
   userData.message = userMessage;
+  document.body.classList.add("bot-responding");
   fileUploadWrapper.classList.remove("active", "img-attached", "file-attached");
 
   // Generate user message and add to chats container
@@ -55,6 +58,7 @@ const createMsgElement = (content, ...classes) => {
 // Generate Bot Response
 const generateResponse = async (botMsgDiv) => {
   const textElement = botMsgDiv.querySelector(".message-text");
+  controller = new AbortController();
   // Add user message to chat history
   chatHistory.push({
     role: "user",
@@ -77,6 +81,7 @@ const generateResponse = async (botMsgDiv) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: chatHistory }),
+      signal: controller.signal,
     });
 
     const data = await response.json();
@@ -105,14 +110,15 @@ const typingEffect = (text, textElement, botMsgDiv) => {
   textElement.textContent = ``;
   const words = text.split(" ");
   let wordIndex = 0;
-  const typingInterval = setInterval(() => {
+  typingInterval = setInterval(() => {
     if (wordIndex < words.length) {
       textElement.textContent +=
         (wordIndex === 0 ? "" : " ") + words[wordIndex++];
       scrollToBottom();
     } else {
-      botMsgDiv.classList.remove("loading");
       clearInterval(typingInterval);
+      botMsgDiv.classList.remove("loading");
+      document.body.classList.remove("bot-responding");
     }
   }, 40);
 };
@@ -154,6 +160,19 @@ fileInput.addEventListener("change", () => {
 cancelFileBtn.addEventListener("click", () => {
   userData.file = {};
   fileUploadWrapper.classList.remove("active", "img-attached", "file-attached");
+});
+
+// Stop Response
+stopResponseBtn.addEventListener("click", () => {
+  userData.file = {};
+  controller?.abort();
+  clearInterval(typingInterval);
+  chatsContainer
+    .querySelector(".bot-message.loading")
+    .classList.remove("loading");
+  setTimeout(() => {
+    document.body.classList.remove("bot-responding");
+  }, 100);
 });
 
 promptForm.addEventListener("submit", handleFormSubmit);

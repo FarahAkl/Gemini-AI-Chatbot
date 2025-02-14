@@ -156,10 +156,9 @@ a {
         -moz-transition: 0.3s ease;
         -ms-transition: 0.3s ease;
         -o-transition: 0.3s ease;
-
       }
 
-      :is(button:hover, .file-icon,#cancel-file-btn){
+      :is(button:hover, .file-icon, #cancel-file-btn) {
         background-color: var(--secondary-hover-color);
       }
 
@@ -199,6 +198,13 @@ a {
         .prompt-actions {
           margin-right: 7px;
           gap: 5px;
+
+          #stop-response-btn {
+            display: none;
+            &:hover {
+              color: #d62939;
+            }
+          }
         }
 
         :where(.file-upload-wrapper, button, img) {
@@ -229,7 +235,7 @@ a {
             display: none;
           }
 
-          #add-file-btn{
+          #add-file-btn {
             display: block;
           }
 
@@ -240,7 +246,7 @@ a {
               display: block;
             }
 
-            #add-file-btn{
+            #add-file-btn {
               display: none;
             }
           }
@@ -249,7 +255,7 @@ a {
             color: #d62939;
           }
 
-          .file-icon{
+          .file-icon {
             color: #1d7efd;
           }
         }
@@ -350,6 +356,12 @@ a {
     -ms-transform: rotate(360deg);
     -o-transform: rotate(360deg);
   }
+}
+body.bot-responding .prompt-form .file-upload-wrapper {
+  display: none;
+}
+body.bot-responding .prompt-form .prompt-actions #stop-response-btn {
+  display: block !important;
 }
 .container :is(.app-header, .suggestions) {
   display: none;
