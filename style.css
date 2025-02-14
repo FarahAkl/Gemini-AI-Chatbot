@@ -19,14 +19,14 @@ body {
   background: var(--primary-color);
   color: var(--text-color);
 }
-body.light-theme{
-  --text-color:#090c13;
-  --subheading-color:#7b8cae;
-  --placeholder-color:#606982;
-  --primary-color:#f3f7ff;
-  --secondary-color:#dce6f9;
-  --seocndary-hover-color:#d2ddf2;
-  --scrollbar-color:#a2aac2;
+body.light-theme {
+  --text-color: #090c13;
+  --subheading-color: #7b8cae;
+  --placeholder-color: #606982;
+  --primary-color: #f3f7ff;
+  --secondary-color: #dce6f9;
+  --seocndary-hover-color: #d2ddf2;
+  --scrollbar-color: #a2aac2;
 }
 ul {
   list-style: none;
@@ -374,4 +374,31 @@ body.bot-responding .prompt-form .prompt-actions #stop-response-btn {
 }
 body.chats-active .container :where(.app-header, .suggestions) {
   display: none;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 0 100px;
+  }
+  .app-header {
+    :is(.heading, .sub-heading) {
+      font-size: 2rem;
+      line-height: 1.4;
+    }
+  }
+  .prompt-form {
+    .file-upload-wrapper {
+      &.active {
+        #cancel-file-btn {
+          opacity: 0;
+        }
+      }
+    }
+  }
+  .prompt-wrapper {
+    &.hide-controls {
+      :where(#toggle-theme-btn, #delete-chats-btn) {
+        display: none;
+      }
+    }
+  }
 }
