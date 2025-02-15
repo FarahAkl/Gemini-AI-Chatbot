@@ -1,3 +1,5 @@
+import { GOOGLE_API_KEY } from "./api.js"
+
 const container = document.querySelector(".container");
 const promptForm = document.querySelector(".prompt-form");
 const promptInput = promptForm.querySelector(".prompt-input");
@@ -9,7 +11,6 @@ const deleteChatsBtn = document.querySelector("#delete-chats-btn");
 const fileInput = promptForm.querySelector("#file-input");
 const chatsContainer = document.querySelector(".chats-container");
 const themeToggleBtn = document.querySelector("#toggle-theme-btn");
-const GOOGLE_API_KEY = "AIzaSyDJXAr-WcQsY4JC-fUC_PVmMNI6rONn5gU";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GOOGLE_API_KEY}`;
 
 let typingInterval, controller;
